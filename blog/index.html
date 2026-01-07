@@ -79,8 +79,11 @@
         .post-card:hover { background: var(--bg-card-hover); border-color: var(--border-light); transform: translateX(4px); }
         .post-meta { font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.1em; color: var(--text-muted); text-transform: uppercase; margin-bottom: 12px; display: flex; gap: 16px; }
         .post-category { color: var(--accent); }
-        .post-title { font-size: 24px; font-weight: 600; color: var(--text-primary); margin-bottom: 12px; line-height: 1.3; }
-        .post-excerpt { color: var(--text-secondary); font-size: 17px; line-height: 1.7; }
+        .post-title { font-size: 24px; font-weight: 600; color: var(--text-primary); margin-bottom: 16px; line-height: 1.3; }
+        .post-teaser { color: var(--text-secondary); font-size: 17px; line-height: 1.8; }
+        .post-teaser p { margin-bottom: 12px; }
+        .post-teaser p:last-child { margin-bottom: 0; }
+        .read-more { display: inline-block; margin-top: 16px; font-family: var(--font-mono); font-size: 12px; letter-spacing: 0.05em; color: var(--accent); text-transform: uppercase; }
 
         .loading { text-align: center; padding: 60px 0; color: var(--text-muted); font-family: var(--font-mono); font-size: 14px; }
         .empty { text-align: center; padding: 60px 0; }
@@ -188,16 +191,49 @@
                 }
 
                 postsGrid.style.display = 'flex';
-                postsGrid.innerHTML = data.posts.map(post => `
-                    <a href="/post.html?slug=${post.slug}" class="post-card">
-                        <div class="post-meta">
-                            ${post.category ? `<span class="post-category">${post.category}</span>` : ''}
-                            <span>${formatDate(post.published_at)}</span>
-                        </div>
-                        <h2 class="post-title">${escapeHtml(post.title)}</h2>
-                        ${post.excerpt ? `<p class="post-excerpt">${escapeHtml(post.excerpt)}</p>` : ''}
-                    </a>
-                `).join('');
+                postsGrid.innerHTML = data.posts.map(post => {
+                    // Get teaser: use excerpt, or first ~300 chars of content
+                    let teaser = post.excerpt || '';
+                    if (post.content_html && !teaser) {
+                        // Strip HTML and get first 300 chars
+                        const temp = document.createElement('div');
+                        temp.innerHTML = post.content_html;
+                        teaser = temp.textContent.slice(0, 300) + '...';
+                    }
+                    
+                    // Format teaser into paragraphs if it has content_html
+                    let teaserHtml = '';
+                    if (post.content_html) {
+                        // Get first 2-3 paragraphs from HTML
+                        const temp = document.createElement('div');
+                        temp.innerHTML = post.content_html;
+                        const paragraphs = temp.querySelectorAll('p');
+                        let charCount = 0;
+                        for (let i = 0; i < Math.min(paragraphs.length, 3); i++) {
+                            const text = paragraphs[i].textContent;
+                            if (charCount + text.length > 400 && charCount > 0) break;
+                            teaserHtml += `<p>${escapeHtml(text)}</p>`;
+                            charCount += text.length;
+                        }
+                        if (charCount > 400 || paragraphs.length > 3) {
+                            teaserHtml = teaserHtml.replace(/<\/p>$/, '...</p>');
+                        }
+                    } else if (teaser) {
+                        teaserHtml = `<p>${escapeHtml(teaser)}</p>`;
+                    }
+                    
+                    return `
+                        <a href="/blog/post.html?slug=${post.slug}" class="post-card">
+                            <div class="post-meta">
+                                ${post.category ? `<span class="post-category">${escapeHtml(post.category)}</span>` : ''}
+                                <span>${formatDate(post.published_at)}</span>
+                            </div>
+                            <h2 class="post-title">${escapeHtml(post.title)}</h2>
+                            <div class="post-teaser">${teaserHtml}</div>
+                            <span class="read-more">Read More →</span>
+                        </a>
+                    `;
+                }).join('');
 
             } catch (error) {
                 console.error('Error loading posts:', error);
