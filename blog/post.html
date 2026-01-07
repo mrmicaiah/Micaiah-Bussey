@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="">
+    <title>Loading... | Micaiah Bussey</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Crimson+Pro:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-primary: #0a0a0c;
+            --bg-secondary: #12121a;
+            --bg-card: #1a1a24;
+            --bg-card-hover: #222230;
+            --text-primary: #e8e8ec;
+            --text-secondary: #9090a0;
+            --text-muted: #606070;
+            --accent: #c9a227;
+            --accent-dim: #a08020;
+            --accent-glow: rgba(201, 162, 39, 0.15);
+            --border: #2a2a38;
+            --border-light: #3a3a48;
+            --font-serif: 'Crimson Pro', Georgia, serif;
+            --font-mono: 'Space Mono', monospace;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html { scroll-behavior: smooth; }
+
+        body {
+            font-family: var(--font-serif);
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.7;
+            font-size: 18px;
+            min-height: 100vh;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+            opacity: 0.03;
+            pointer-events: none;
+            z-index: 1000;
+        }
+
+        .container { max-width: 800px; margin: 0 auto; padding: 0 24px; }
+        
+        .header { padding: 32px 0; border-bottom: 1px solid var(--border); }
+        .header-content { display: flex; justify-content: space-between; align-items: center; }
+        .logo { font-family: var(--font-mono); font-size: 14px; letter-spacing: 0.1em; color: var(--text-secondary); text-decoration: none; text-transform: uppercase; }
+        .logo:hover { color: var(--accent); }
+        .nav-links { display: flex; gap: 32px; }
+        .nav-links a { font-family: var(--font-mono); font-size: 12px; letter-spacing: 0.05em; color: var(--text-muted); text-decoration: none; text-transform: uppercase; transition: color 0.2s; }
+        .nav-links a:hover { color: var(--text-primary); }
+        .nav-links a.active { color: var(--accent); }
+
+        .article { padding: 60px 0; }
+        .article-header { margin-bottom: 48px; }
+        .article-meta { font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.1em; color: var(--text-muted); text-transform: uppercase; margin-bottom: 16px; display: flex; gap: 16px; flex-wrap: wrap; }
+        .article-category { color: var(--accent); }
+        .article-title { font-size: 42px; font-weight: 700; letter-spacing: -0.02em; line-height: 1.2; margin-bottom: 20px; }
+        .article-excerpt { font-size: 22px; color: var(--text-secondary); line-height: 1.6; border-left: 3px solid var(--accent); padding-left: 24px; }
+
+        .article-content { font-size: 19px; line-height: 1.8; }
+        .article-content p { margin-bottom: 24px; }
+        .article-content h2 { font-size: 28px; font-weight: 600; margin: 48px 0 20px; }
+        .article-content h3 { font-size: 22px; font-weight: 600; margin: 36px 0 16px; }
+        .article-content blockquote { border-left: 3px solid var(--accent); padding-left: 24px; margin: 32px 0; font-style: italic; color: var(--text-secondary); }
+        .article-content ul, .article-content ol { margin: 24px 0; padding-left: 32px; }
+        .article-content li { margin-bottom: 12px; }
+        .article-content a { color: var(--accent); text-decoration: none; border-bottom: 1px solid var(--accent-dim); }
+        .article-content a:hover { border-bottom-color: var(--accent); }
+        .article-content code { font-family: var(--font-mono); font-size: 0.9em; background: var(--bg-card); padding: 2px 6px; border-radius: 3px; }
+        .article-content pre { background: var(--bg-card); padding: 20px; overflow-x: auto; margin: 24px 0; border-radius: 4px; }
+        .article-content pre code { background: none; padding: 0; }
+        .article-content img { max-width: 100%; height: auto; margin: 32px 0; }
+        .article-content strong { font-weight: 600; }
+        .article-content em { font-style: italic; }
+
+        .article-footer { margin-top: 60px; padding-top: 32px; border-top: 1px solid var(--border); }
+        .article-tags { display: flex; gap: 12px; flex-wrap: wrap; margin-bottom: 32px; }
+        .article-tag { font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.05em; color: var(--text-muted); text-transform: uppercase; padding: 6px 12px; border: 1px solid var(--border); text-decoration: none; }
+        .article-tag:hover { color: var(--text-primary); border-color: var(--border-light); }
+
+        .back-link { display: inline-block; font-family: var(--font-mono); font-size: 13px; letter-spacing: 0.05em; color: var(--accent); text-decoration: none; text-transform: uppercase; }
+        .back-link:hover { color: var(--text-primary); }
+        .back-link::before { content: '← '; }
+
+        .loading { text-align: center; padding: 120px 0; color: var(--text-muted); font-family: var(--font-mono); font-size: 14px; }
+        .error { text-align: center; padding: 120px 0; }
+        .error-title { font-size: 32px; margin-bottom: 16px; }
+        .error-text { color: var(--text-secondary); margin-bottom: 32px; }
+
+        .cta-box { background: var(--bg-secondary); border: 1px solid var(--border); padding: 32px; text-align: center; margin-top: 48px; }
+        .cta-title { font-size: 22px; font-weight: 600; margin-bottom: 12px; }
+        .cta-text { color: var(--text-secondary); margin-bottom: 20px; }
+        .cta-btn { display: inline-block; font-family: var(--font-mono); font-size: 13px; letter-spacing: 0.05em; color: var(--bg-primary); background: var(--accent); padding: 14px 28px; text-decoration: none; text-transform: uppercase; transition: all 0.2s; }
+        .cta-btn:hover { background: var(--text-primary); }
+
+        .footer { padding: 48px 0; border-top: 1px solid var(--border); text-align: center; }
+        .footer-text { font-family: var(--font-mono); font-size: 12px; color: var(--text-muted); }
+        .footer-links { margin-top: 16px; }
+        .footer-links a { font-family: var(--font-mono); font-size: 11px; color: var(--text-muted); text-decoration: none; margin: 0 16px; text-transform: uppercase; letter-spacing: 0.05em; }
+        .footer-links a:hover { color: var(--accent); }
+
+        @media (max-width: 768px) {
+            .header-content { flex-direction: column; gap: 16px; }
+            .nav-links { gap: 24px; }
+            .article { padding: 40px 0; }
+            .article-title { font-size: 32px; }
+            .article-excerpt { font-size: 18px; }
+            .article-content { font-size: 17px; }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="container">
+            <div class="header-content">
+                <a href="https://micaiahbussey.com" class="logo">Micaiah Bussey</a>
+                <nav class="nav-links">
+                    <a href="/" class="active">Blog</a>
+                    <a href="https://micaiahbussey.com/#vote">Vote</a>
+                    <a href="https://micaiahbussey.com/#join">Join</a>
+                    <a href="https://micaiahbussey.com/writers">For Writers</a>
+                </nav>
+            </div>
+        </div>
+    </header>
+
+    <article class="article">
+        <div class="container">
+            <div class="loading" id="loading">Loading post...</div>
+            
+            <div id="articleContent" style="display: none;">
+                <header class="article-header">
+                    <div class="article-meta">
+                        <span class="article-category" id="postCategory"></span>
+                        <span id="postDate"></span>
+                        <span id="postAuthor"></span>
+                    </div>
+                    <h1 class="article-title" id="postTitle"></h1>
+                    <p class="article-excerpt" id="postExcerpt"></p>
+                </header>
+                
+                <div class="article-content" id="postContent"></div>
+                
+                <footer class="article-footer">
+                    <div class="article-tags" id="postTags"></div>
+                    <a href="/" class="back-link">Back to all posts</a>
+                </footer>
+
+                <div class="cta-box">
+                    <h3 class="cta-title">Want More Like This?</h3>
+                    <p class="cta-text">Get craft insights, behind-the-scenes content, and early access to new work.</p>
+                    <a href="https://micaiahbussey.com/#join" class="cta-btn">Join the List</a>
+                </div>
+            </div>
+
+            <div class="error" id="error" style="display: none;">
+                <h1 class="error-title">Post Not Found</h1>
+                <p class="error-text">This post doesn't exist or may have been removed.</p>
+                <a href="/" class="back-link">Back to all posts</a>
+            </div>
+        </div>
+    </article>
+
+    <footer class="footer">
+        <div class="container">
+            <p class="footer-text">© 2025 Micaiah Bussey. Writing thrillers in Virginia.</p>
+            <div class="footer-links">
+                <a href="https://micaiahbussey.com/readers">For Readers</a>
+                <a href="https://micaiahbussey.com/writers">For Writers</a>
+                <a href="https://tiktok.com/@micaiahbussey" target="_blank">TikTok</a>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        const API_BASE = 'https://email-bot-server.micaiah-tasks.workers.dev';
+        const SITE = 'micaiah-bussey';
+
+        const loading = document.getElementById('loading');
+        const articleContent = document.getElementById('articleContent');
+        const error = document.getElementById('error');
+
+        // Get slug from URL
+        const urlParams = new URLSearchParams(window.location.search);
+        const slug = urlParams.get('slug');
+
+        async function loadPost() {
+            if (!slug) {
+                showError();
+                return;
+            }
+
+            try {
+                const response = await fetch(`${API_BASE}/api/blog/posts/${slug}?site=${SITE}`);
+                
+                if (!response.ok) {
+                    showError();
+                    return;
+                }
+
+                const data = await response.json();
+                const post = data.post;
+
+                if (!post) {
+                    showError();
+                    return;
+                }
+
+                // Update page
+                document.title = `${post.title} | Micaiah Bussey`;
+                document.querySelector('meta[name="description"]').content = post.excerpt || '';
+
+                document.getElementById('postTitle').textContent = post.title;
+                document.getElementById('postDate').textContent = formatDate(post.published_at);
+                document.getElementById('postAuthor').textContent = post.author || 'Micaiah Bussey';
+                
+                if (post.category) {
+                    document.getElementById('postCategory').textContent = post.category;
+                } else {
+                    document.getElementById('postCategory').style.display = 'none';
+                }
+
+                if (post.excerpt) {
+                    document.getElementById('postExcerpt').textContent = post.excerpt;
+                } else {
+                    document.getElementById('postExcerpt').style.display = 'none';
+                }
+
+                document.getElementById('postContent').innerHTML = post.content_html || '';
+
+                // Tags
+                if (post.tags) {
+                    const tags = typeof post.tags === 'string' ? JSON.parse(post.tags) : post.tags;
+                    if (tags && tags.length > 0) {
+                        document.getElementById('postTags').innerHTML = tags.map(tag => 
+                            `<a href="/?tag=${encodeURIComponent(tag)}" class="article-tag">${escapeHtml(tag)}</a>`
+                        ).join('');
+                    }
+                }
+
+                loading.style.display = 'none';
+                articleContent.style.display = 'block';
+
+            } catch (err) {
+                console.error('Error loading post:', err);
+                showError();
+            }
+        }
+
+        function showError() {
+            loading.style.display = 'none';
+            error.style.display = 'block';
+        }
+
+        function formatDate(dateString) {
+            if (!dateString) return '';
+            const date = new Date(dateString);
+            return date.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
+        }
+
+        function escapeHtml(text) {
+            if (!text) return '';
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
+        loadPost();
+    </script>
+</body>
+</html>
