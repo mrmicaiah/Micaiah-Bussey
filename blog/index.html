@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Craft insights, process breakdowns, and behind-the-scenes from thriller writer Micaiah Bussey.">
+    <title>Blog | Micaiah Bussey</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Crimson+Pro:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="alternate" type="application/rss+xml" title="Micaiah Bussey Blog" href="https://email-bot-server.micaiah-tasks.workers.dev/api/blog/feed?site=micaiah-bussey">
+    <style>
+        :root {
+            --bg-primary: #0a0a0c;
+            --bg-secondary: #12121a;
+            --bg-card: #1a1a24;
+            --bg-card-hover: #222230;
+            --text-primary: #e8e8ec;
+            --text-secondary: #9090a0;
+            --text-muted: #606070;
+            --accent: #c9a227;
+            --accent-dim: #a08020;
+            --accent-glow: rgba(201, 162, 39, 0.15);
+            --border: #2a2a38;
+            --border-light: #3a3a48;
+            --font-serif: 'Crimson Pro', Georgia, serif;
+            --font-mono: 'Space Mono', monospace;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html { scroll-behavior: smooth; }
+
+        body {
+            font-family: var(--font-serif);
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.7;
+            font-size: 18px;
+            min-height: 100vh;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+            opacity: 0.03;
+            pointer-events: none;
+            z-index: 1000;
+        }
+
+        .container { max-width: 800px; margin: 0 auto; padding: 0 24px; }
+        
+        .header { padding: 32px 0; border-bottom: 1px solid var(--border); }
+        .header-content { display: flex; justify-content: space-between; align-items: center; }
+        .logo { font-family: var(--font-mono); font-size: 14px; letter-spacing: 0.1em; color: var(--text-secondary); text-decoration: none; text-transform: uppercase; }
+        .logo:hover { color: var(--accent); }
+        .nav-links { display: flex; gap: 32px; }
+        .nav-links a { font-family: var(--font-mono); font-size: 12px; letter-spacing: 0.05em; color: var(--text-muted); text-decoration: none; text-transform: uppercase; transition: color 0.2s; }
+        .nav-links a:hover { color: var(--text-primary); }
+        .nav-links a.active { color: var(--accent); }
+
+        .hero { padding: 80px 0 60px; text-align: center; }
+        .hero-tagline { font-family: var(--font-mono); font-size: 12px; letter-spacing: 0.2em; color: var(--accent); text-transform: uppercase; margin-bottom: 16px; }
+        .hero-title { font-size: 48px; font-weight: 700; letter-spacing: -0.02em; margin-bottom: 16px; }
+        .hero-subtitle { color: var(--text-secondary); font-size: 20px; max-width: 500px; margin: 0 auto; }
+
+        .categories { padding: 32px 0; border-bottom: 1px solid var(--border); }
+        .categories-list { display: flex; gap: 24px; justify-content: center; flex-wrap: wrap; }
+        .category-link { font-family: var(--font-mono); font-size: 12px; letter-spacing: 0.05em; color: var(--text-muted); text-decoration: none; text-transform: uppercase; padding: 8px 16px; border: 1px solid var(--border); transition: all 0.2s; }
+        .category-link:hover { color: var(--text-primary); border-color: var(--border-light); }
+        .category-link.active { color: var(--accent); border-color: var(--accent); }
+
+        .posts { padding: 60px 0; }
+        .posts-grid { display: flex; flex-direction: column; gap: 32px; }
+
+        .post-card { background: var(--bg-card); border: 1px solid var(--border); padding: 32px; transition: all 0.3s ease; text-decoration: none; display: block; }
+        .post-card:hover { background: var(--bg-card-hover); border-color: var(--border-light); transform: translateX(4px); }
+        .post-meta { font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.1em; color: var(--text-muted); text-transform: uppercase; margin-bottom: 12px; display: flex; gap: 16px; }
+        .post-category { color: var(--accent); }
+        .post-title { font-size: 24px; font-weight: 600; color: var(--text-primary); margin-bottom: 12px; line-height: 1.3; }
+        .post-excerpt { color: var(--text-secondary); font-size: 17px; line-height: 1.7; }
+
+        .loading { text-align: center; padding: 60px 0; color: var(--text-muted); font-family: var(--font-mono); font-size: 14px; }
+        .empty { text-align: center; padding: 60px 0; }
+        .empty-title { font-size: 24px; margin-bottom: 12px; }
+        .empty-text { color: var(--text-secondary); }
+
+        .footer { padding: 48px 0; border-top: 1px solid var(--border); text-align: center; }
+        .footer-text { font-family: var(--font-mono); font-size: 12px; color: var(--text-muted); }
+        .footer-links { margin-top: 16px; }
+        .footer-links a { font-family: var(--font-mono); font-size: 11px; color: var(--text-muted); text-decoration: none; margin: 0 16px; text-transform: uppercase; letter-spacing: 0.05em; }
+        .footer-links a:hover { color: var(--accent); }
+
+        @media (max-width: 768px) {
+            .header-content { flex-direction: column; gap: 16px; }
+            .nav-links { gap: 24px; }
+            .hero { padding: 60px 0 40px; }
+            .hero-title { font-size: 36px; }
+            .post-card { padding: 24px; }
+            .post-title { font-size: 20px; }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="container">
+            <div class="header-content">
+                <a href="https://micaiahbussey.com" class="logo">Micaiah Bussey</a>
+                <nav class="nav-links">
+                    <a href="/" class="active">Blog</a>
+                    <a href="https://micaiahbussey.com/#vote">Vote</a>
+                    <a href="https://micaiahbussey.com/#join">Join</a>
+                    <a href="https://micaiahbussey.com/writers">For Writers</a>
+                </nav>
+            </div>
+        </div>
+    </header>
+
+    <section class="hero">
+        <div class="container">
+            <div class="hero-tagline">From the Desk</div>
+            <h1 class="hero-title">The Blog</h1>
+            <p class="hero-subtitle">Craft insights, process breakdowns, and behind-the-scenes looks at building thrillers.</p>
+        </div>
+    </section>
+
+    <section class="categories" id="categoriesSection" style="display: none;">
+        <div class="container">
+            <div class="categories-list" id="categoriesList">
+                <a href="/" class="category-link active">All</a>
+            </div>
+        </div>
+    </section>
+
+    <section class="posts">
+        <div class="container">
+            <div class="loading" id="loading">Loading posts...</div>
+            <div class="posts-grid" id="postsGrid" style="display: none;"></div>
+            <div class="empty" id="empty" style="display: none;">
+                <h2 class="empty-title">No Posts Yet</h2>
+                <p class="empty-text">Check back soon for craft insights and behind-the-scenes content.</p>
+            </div>
+        </div>
+    </section>
+
+    <footer class="footer">
+        <div class="container">
+            <p class="footer-text">© 2025 Micaiah Bussey. Writing thrillers in Virginia.</p>
+            <div class="footer-links">
+                <a href="https://micaiahbussey.com/readers">For Readers</a>
+                <a href="https://micaiahbussey.com/writers">For Writers</a>
+                <a href="https://tiktok.com/@micaiahbussey" target="_blank">TikTok</a>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        const API_BASE = 'https://email-bot-server.micaiah-tasks.workers.dev';
+        const SITE = 'micaiah-bussey';
+
+        const loading = document.getElementById('loading');
+        const postsGrid = document.getElementById('postsGrid');
+        const empty = document.getElementById('empty');
+        const categoriesSection = document.getElementById('categoriesSection');
+        const categoriesList = document.getElementById('categoriesList');
+
+        // Get category from URL
+        const urlParams = new URLSearchParams(window.location.search);
+        const currentCategory = urlParams.get('category');
+
+        async function loadPosts() {
+            try {
+                let url = `${API_BASE}/api/blog/posts?site=${SITE}&limit=20`;
+                if (currentCategory) {
+                    url += `&category=${encodeURIComponent(currentCategory)}`;
+                }
+
+                const response = await fetch(url);
+                const data = await response.json();
+
+                loading.style.display = 'none';
+
+                if (!data.posts || data.posts.length === 0) {
+                    empty.style.display = 'block';
+                    return;
+                }
+
+                postsGrid.style.display = 'flex';
+                postsGrid.innerHTML = data.posts.map(post => `
+                    <a href="/post.html?slug=${post.slug}" class="post-card">
+                        <div class="post-meta">
+                            ${post.category ? `<span class="post-category">${post.category}</span>` : ''}
+                            <span>${formatDate(post.published_at)}</span>
+                        </div>
+                        <h2 class="post-title">${escapeHtml(post.title)}</h2>
+                        ${post.excerpt ? `<p class="post-excerpt">${escapeHtml(post.excerpt)}</p>` : ''}
+                    </a>
+                `).join('');
+
+            } catch (error) {
+                console.error('Error loading posts:', error);
+                loading.textContent = 'Error loading posts. Please try again.';
+            }
+        }
+
+        async function loadCategories() {
+            try {
+                const response = await fetch(`${API_BASE}/api/blog/categories?site=${SITE}`);
+                const data = await response.json();
+
+                if (data.categories && data.categories.length > 0) {
+                    categoriesSection.style.display = 'block';
+                    
+                    const allLink = `<a href="/" class="category-link ${!currentCategory ? 'active' : ''}">All</a>`;
+                    const categoryLinks = data.categories.map(cat => 
+                        `<a href="/?category=${encodeURIComponent(cat.category)}" class="category-link ${currentCategory === cat.category ? 'active' : ''}">${escapeHtml(cat.category)} (${cat.count})</a>`
+                    ).join('');
+                    
+                    categoriesList.innerHTML = allLink + categoryLinks;
+                }
+            } catch (error) {
+                console.error('Error loading categories:', error);
+            }
+        }
+
+        function formatDate(dateString) {
+            if (!dateString) return '';
+            const date = new Date(dateString);
+            return date.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
+        }
+
+        function escapeHtml(text) {
+            if (!text) return '';
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
+        // Load data
+        loadPosts();
+        loadCategories();
+    </script>
+</body>
+</html>
